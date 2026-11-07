@@ -5,7 +5,7 @@ import type {
   LoadedLesson,
   LoadedUnit,
 } from '../lib/types';
-import { flattenLessons, getLessonStatuses } from '../lib/unlock';
+import { flattenLessons, getUnitLessonStatuses } from '../lib/unlock';
 import { CheckIcon, CloseIcon, LockIcon, StarIcon } from '../components/Icons';
 import { Mascot } from '../components/Mascot';
 
@@ -65,10 +65,7 @@ export function LearnScreen({
   const popoverRef = useRef<HTMLDivElement | null>(null);
 
   const allLessons = flattenLessons(content.units);
-  const statuses = getLessonStatuses(
-    allLessons.map((lesson) => lesson.id),
-    completedLessonIds,
-  );
+  const statuses = getUnitLessonStatuses(content.units, completedLessonIds);
   const currentLesson = allLessons.find(
     (lesson) => statuses[lesson.id] === 'current',
   );
