@@ -23,6 +23,19 @@ npm test         # Vitest（src/lib などの純粋ロジックとコンテン�
 進捗は端末ごとの localStorage に保存されるため、PC とスマホで記録は共有されません。
 アイコンの元画像は `public/icons/icon.svg` です。
 
+## 学習リマインド通知
+
+毎日 20 時（日本時間）に、GitHub Actions（`.github/workflows/reminder.yml`）がスマホへプッシュ通知を送ります。サーバーは不要です。
+
+初回だけ次の設定をします。
+
+1. リポジトリの Settings → Secrets and variables → Actions に、シークレット `VAPID_PRIVATE_KEY`（`src/lib/notifications.ts` の公開鍵と対になる秘密鍵）を登録する。
+2. スマホでアプリを開き（iPhone はホーム画面に追加したアイコンから。iOS 16.4 以降）、記録画面の「通知をオンにする」を押す。
+3. 表示された「登録コード」をコピーし、シークレット `PUSH_SUBSCRIPTIONS` に貼る。複数端末なら 1 行に 1 つずつ並べる。
+4. Actions タブの「Study reminder」→「Run workflow」で、すぐに通知が届くか試せる。
+
+時刻を変えるときは `reminder.yml` の `cron`（UTC）を書き換えます。公開リポジトリでは 60 日間コミットがないと定期実行が止まるので、そのときは Actions タブから有効化し直してください。
+
 ## 問題の足し方
 
 問題は `src/content/units/*.json` に置きます。ファイルを足すだけで、学ぶ画面に自動で並びます（コードの変更は不要）。
