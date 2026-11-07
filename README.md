@@ -13,6 +13,16 @@ npm run preview  # ビルド結果の確認
 npm test         # Vitest（src/lib などの純粋ロジックとコンテンツ検証）
 ```
 
+## スマホで使う（PWA）
+
+本番ビルド（`dist/`）はホーム画面に追加でき、一度開けばオフラインでも動きます。
+
+1. `npm run build` で `dist/` を作り、HTTPS で配信できる場所に置く（`npm run preview -- --host` で同じ Wi-Fi のスマホから試すこともできますが、HTTP ではオフライン機能は効きません）。
+2. スマホのブラウザで開き、iPhone は Safari の共有メニュー →「ホーム画面に追加」、Android は Chrome のメニュー →「ホーム画面に追加」。
+
+進捗は端末ごとの localStorage に保存されるため、PC とスマホで記録は共有されません。
+アイコンの元画像は `public/icons/icon.svg` です。
+
 ## 問題の足し方
 
 問題は `src/content/units/*.json` に置きます。ファイルを足すだけで、学ぶ画面に自動で並びます（コードの変更は不要）。

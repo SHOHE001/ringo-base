@@ -17,3 +17,12 @@ createRoot(rootElement).render(
     <App />
   </StrictMode>,
 );
+
+// 本番ビルドのときだけ Service Worker を登録する（ホーム画面追加・オフライン用）。
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {
+      // 登録に失敗してもアプリはそのまま使える
+    });
+  });
+}
