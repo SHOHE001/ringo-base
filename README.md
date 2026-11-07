@@ -29,7 +29,7 @@ npm test         # Vitest（src/lib などの純粋ロジックとコンテン�
 
 初回だけ次の設定をします。
 
-1. リポジトリの Settings → Secrets and variables → Actions に、シークレット `VAPID_PRIVATE_KEY`（`src/lib/notifications.ts` の公開鍵と対になる秘密鍵）を登録する。
+1. PC で `npx web-push generate-vapid-keys` を実行して鍵ペアを作り、リポジトリの Settings → Secrets and variables → Actions で、公開鍵を Variables の `VAPID_PUBLIC_KEY`、秘密鍵を Secrets の `VAPID_PRIVATE_KEY` に登録する。その後 Actions の「Deploy to GitHub Pages」を Run workflow で実行し直す（公開鍵をアプリに埋め込むため）。
 2. スマホでアプリを開き（iPhone はホーム画面に追加したアイコンから。iOS 16.4 以降）、記録画面の「通知をオンにする」を押す。
 3. 表示された「登録コード」をコピーし、シークレット `PUSH_SUBSCRIPTIONS` に貼る。複数端末なら 1 行に 1 つずつ並べる。
 4. Actions タブの「Study reminder」→「Run workflow」で、すぐに通知が届くか試せる。

@@ -1,10 +1,14 @@
 // 学習リマインド通知（Web Push）。
 // サーバーは使わず、GitHub Actions の定期実行（.github/workflows/reminder.yml）が
-// ここで作った購読情報あてに通知を送る。公開鍵は送信側の秘密鍵と対になっている。
-export const vapidPublicKey =
-  'BAFJSF2mmsTC4CYEhA8xXm80Ne5A0SR3XMzQpXcLHnk1aMYVxIA0z9jCxejCXygcl7V49hSgFvYN_gJd2eycjsQ';
+// ここで作った購読情報あてに通知を送る。公開鍵は GitHub のリポジトリ変数 VAPID_PUBLIC_KEY から
+// ビルド時に埋め込まれ、シークレット VAPID_PRIVATE_KEY と対になっている。
+export const vapidPublicKey: string = import.meta.env.VITE_VAPID_PUBLIC_KEY ?? '';
 
-export type PushSupport = 'supported' | 'needs-home-screen' | 'unsupported';
+export type PushSupport =
+  | 'supported'
+  | 'needs-home-screen'
+  | 'unsupported'
+  | 'not-configured';
 
 /** Base64URL 文字列を、PushManager.subscribe が受け取るバイト列に変換する。 */
 export function urlBase64ToUint8Array(base64Url: string): Uint8Array<ArrayBuffer> {
@@ -34,7 +38,8 @@ export function detectPushSupport(): PushSupport {
     'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
   // iPhone の Safari は、ホーム画面に追加したアプリでしか通知 API が出てこない。
   if (isIos() && !isStandalone()) return 'needs-home-screen';
-  return hasApis ? 'supported' : 'unsupported';
+  if (!hasApis) return 'unsupported';
+  return vapidPublicKey ? 'supported' : 'not-configured';
 }
 
 async function getRegistration(): Promise<ServiceWorkerRegistration> {

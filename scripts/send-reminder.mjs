@@ -1,11 +1,10 @@
 // 学習リマインド通知を送る（GitHub Actions の定期実行から呼ばれる）。
 // 必要な環境変数:
-//   VAPID_PRIVATE_KEY   … src/lib/notifications.ts の公開鍵と対になる秘密鍵
+//   VAPID_PUBLIC_KEY    … リポジトリ変数。アプリにも同じ値が埋め込まれる
+//   VAPID_PRIVATE_KEY   … 公開鍵と対になる秘密鍵（シークレット）
 //   PUSH_SUBSCRIPTIONS  … アプリの「登録コード」。複数端末なら JSON 配列か、1 行に 1 つ。
 import * as webpush from 'web-push';
 
-const VAPID_PUBLIC_KEY =
-  'BAFJSF2mmsTC4CYEhA8xXm80Ne5A0SR3XMzQpXcLHnk1aMYVxIA0z9jCxejCXygcl7V49hSgFvYN_gJd2eycjsQ';
 
 const MESSAGES = [
   '今日の 1 レッスン、やってみよう！',
@@ -25,15 +24,16 @@ function parseSubscriptions(raw) {
     .map((line) => JSON.parse(line));
 }
 
+const publicKey = process.env.VAPID_PUBLIC_KEY?.trim();
 const privateKey = process.env.VAPID_PRIVATE_KEY?.trim();
 const subscriptions = parseSubscriptions(process.env.PUSH_SUBSCRIPTIONS);
 
-if (!privateKey || subscriptions.length === 0) {
-  console.log('VAPID_PRIVATE_KEY か PUSH_SUBSCRIPTIONS が未設定のため、送信をスキップします。');
+if (!publicKey || !privateKey || subscriptions.length === 0) {
+  console.log('VAPID_PUBLIC_KEY / VAPID_PRIVATE_KEY / PUSH_SUBSCRIPTIONS のどれかが未設定のため、送信をスキップします。');
   process.exit(0);
 }
 
-webpush.setVapidDetails('https://shohe001.github.io/ringo-base/', VAPID_PUBLIC_KEY, privateKey);
+webpush.setVapidDetails('https://shohe001.github.io/ringo-base/', publicKey, privateKey);
 
 const day = Math.floor(Date.now() / 86_400_000);
 const payload = JSON.stringify({

@@ -80,6 +80,12 @@ export function NotificationSettings() {
         </p>
       ) : null}
 
+      {support === 'not-configured' ? (
+        <p className="notify-text">
+          通知の鍵がまだ設定されていません（README の「学習リマインド通知」を参照）。
+        </p>
+      ) : null}
+
       {support === 'unsupported' ? (
         <p className="notify-text">このブラウザは通知に対応していません。</p>
       ) : null}
