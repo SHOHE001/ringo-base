@@ -1,0 +1,71 @@
+{
+  "id": "basic-theory",
+  "order": 1,
+  "title": "基礎理論",
+  "description": "サンプル: 2進数と論理演算",
+  "color": "green",
+  "lessons": [
+    {
+      "id": "binary-basics",
+      "title": "2進数のきほん",
+      "questions": [
+        {
+          "type": "choice",
+          "prompt": "2進数の 1010 を10進数で表すと？",
+          "choices": ["8", "10", "12", "14"],
+          "answer": "10",
+          "explanation": "8 + 2 = 10 です。"
+        },
+        {
+          "type": "truefalse",
+          "prompt": "1バイトは8ビットである。",
+          "answer": true,
+          "explanation": "1バイト = 8ビットです。"
+        },
+        {
+          "type": "choice",
+          "prompt": "10進数の 13 を2進数で表すと？",
+          "choices": ["1001", "1011", "1101", "1110"],
+          "answer": "1101",
+          "explanation": "8 + 4 + 1 = 13 なので 1101 です。"
+        },
+        {
+          "type": "order",
+          "prompt": "2の補数を求める手順を順に並べよう",
+          "answer": ["全ビットを反転する", "1を足す"],
+          "distractors": ["1を引く"],
+          "explanation": "全ビットを反転してから1を足します。"
+        }
+      ]
+    },
+    {
+      "id": "logic-operations",
+      "title": "論理演算",
+      "questions": [
+        {
+          "type": "truefalse",
+          "prompt": "1 XOR 1 の結果は 1 である。",
+          "answer": false,
+          "explanation": "XOR は2つの入力が異なるときに 1 になるので、結果は 0 です。"
+        },
+        {
+          "type": "choice",
+          "prompt": "1 AND 0 の結果は？",
+          "choices": ["0", "1"],
+          "answer": "0",
+          "explanation": "AND は両方が 1 のときだけ 1 になります。"
+        },
+        {
+          "type": "match",
+          "prompt": "演算と説明を組み合わせよう",
+          "pairs": [
+            ["AND", "両方が1のとき1"],
+            ["OR", "少なくとも一方が1のとき1"],
+            ["XOR", "2つが異なるとき1"],
+            ["NOT", "0と1を反転する"]
+          ]
+        }
+      ]
+    }
+  ]
+}

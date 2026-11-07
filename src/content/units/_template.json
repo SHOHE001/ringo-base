@@ -1,0 +1,44 @@
+{
+  "id": "unit-id",
+  "order": 99,
+  "title": "ユニット名",
+  "description": "ユニットの説明",
+  "color": "orange",
+  "lessons": [
+    {
+      "id": "lesson-id",
+      "title": "レッスン名",
+      "questions": [
+        {
+          "type": "choice",
+          "prompt": "問題文",
+          "code": "任意: 疑似言語などのコード",
+          "choices": ["選択肢A", "選択肢B", "選択肢C"],
+          "answer": "選択肢A",
+          "explanation": "任意: 解説"
+        },
+        {
+          "type": "truefalse",
+          "prompt": "正誤を問う文",
+          "answer": true,
+          "explanation": "任意: 解説"
+        },
+        {
+          "type": "order",
+          "prompt": "順番に並べる問題",
+          "answer": ["手順1", "手順2", "手順3"],
+          "distractors": ["任意: ダミーの手順"],
+          "explanation": "任意: 解説"
+        },
+        {
+          "type": "match",
+          "prompt": "組み合わせる問題",
+          "pairs": [
+            ["用語1", "説明1"],
+            ["用語2", "説明2"]
+          ]
+        }
+      ]
+    }
+  ]
+}

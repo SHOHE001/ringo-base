@@ -1,0 +1,33 @@
+{
+  "id": "management",
+  "order": 3,
+  "title": "プロジェクトマネジメント",
+  "description": "サンプル: 進捗管理の用語",
+  "color": "purple",
+  "lessons": [
+    {
+      "id": "pm-terms",
+      "title": "WBSとクリティカルパス",
+      "questions": [
+        {
+          "type": "truefalse",
+          "prompt": "WBS は、プロジェクトの作業を階層的に分解したものである。",
+          "answer": true,
+          "explanation": "WBS は Work Breakdown Structure の略です。"
+        },
+        {
+          "type": "choice",
+          "prompt": "クリティカルパスの説明として正しいものは？",
+          "choices": [
+            "開始から終了までで所要時間が最も長い経路",
+            "開始から終了までで所要時間が最も短い経路",
+            "費用が最も安い経路",
+            "担当者が最も少ない経路"
+          ],
+          "answer": "開始から終了までで所要時間が最も長い経路",
+          "explanation": "クリティカルパス上の作業が遅れると、プロジェクト全体が遅れます。"
+        }
+      ]
+    }
+  ]
+}

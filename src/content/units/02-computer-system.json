@@ -1,0 +1,58 @@
+{
+  "id": "computer-system",
+  "order": 2,
+  "title": "コンピュータシステム",
+  "description": "サンプル: CPUと疑似言語",
+  "color": "blue",
+  "lessons": [
+    {
+      "id": "cpu-basics",
+      "title": "CPUのしくみ",
+      "questions": [
+        {
+          "type": "choice",
+          "prompt": "次に実行する命令のアドレスを保持するレジスタは？",
+          "choices": ["プログラムカウンタ", "命令レジスタ", "アキュムレータ", "インデックスレジスタ"],
+          "answer": "プログラムカウンタ",
+          "explanation": "プログラムカウンタは、次に実行する命令のアドレスを保持します。"
+        },
+        {
+          "type": "truefalse",
+          "prompt": "キャッシュメモリは主記憶より高速に動作する。",
+          "answer": true,
+          "explanation": "キャッシュメモリは、CPUと主記憶の速度差を埋めるための高速なメモリです。"
+        },
+        {
+          "type": "match",
+          "prompt": "装置と役割を組み合わせよう",
+          "pairs": [
+            ["制御装置", "命令を解読して各装置に指示する"],
+            ["演算装置", "算術演算や論理演算を行う"],
+            ["記憶装置", "プログラムとデータを保持する"]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pseudo-code",
+      "title": "疑似言語を読む",
+      "questions": [
+        {
+          "type": "choice",
+          "prompt": "実行後の y の値は？",
+          "code": "整数型: x ← 3\n整数型: y ← 5\nx ← x + y\ny ← x - y",
+          "choices": ["2", "3", "5", "8"],
+          "answer": "3",
+          "explanation": "x は 8 になり、y は 8 - 5 = 3 になります。"
+        },
+        {
+          "type": "order",
+          "prompt": "変数 a と b の値を入れ替える処理を順に並べよう",
+          "answer": ["tmp ← a", "a ← b", "b ← tmp"],
+          "distractors": ["a ← tmp"],
+          "explanation": "先に a の値を tmp に退避します。"
+        }
+      ]
+    }
+  ]
+}
