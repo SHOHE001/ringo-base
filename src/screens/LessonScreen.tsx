@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { maxHearts } from '../config';
-import { formatAccuracy, formatCountdown, formatDuration } from '../lib/format';
-import { nextHeartInMs } from '../lib/hearts';
+import { formatAccuracy, formatDuration } from '../lib/format';
 import {
   buildQuestionViews,
   isCorrectAnswer,
@@ -15,7 +13,6 @@ import {
   BoltIcon,
   ClockIcon,
   CloseIcon,
-  HeartIcon,
   StarIcon,
 } from '../components/Icons';
 import { Mascot } from '../components/Mascot';
@@ -39,13 +36,9 @@ export type LessonMode = 'lesson' | 'review';
 
 type LessonScreenProps = {
   lesson: LoadedLesson;
-  /** review ではハートを消費せず、正解した問題を復習リストから外す。 */
+  /** review では正解した問題を復習リストから外す。 */
   mode?: LessonMode;
   isReplay: boolean;
-  hearts: number;
-  heartAnchor: number;
-  onSpendHeart: () => void;
-  onRefillHearts: () => void;
   onWrongQuestion: (questionId: string) => void;
   onCorrectQuestion?: (questionId: string) => void;
   onComplete: (result: LessonResult) => void;
@@ -131,20 +124,12 @@ export function LessonScreen({
   lesson,
   mode = 'lesson',
   isReplay,
-  hearts,
-  heartAnchor,
-  onSpendHeart,
-  onRefillHearts,
   onWrongQuestion,
   onCorrectQuestion,
   onComplete,
   onExit,
 }: LessonScreenProps) {
   const isReview = mode === 'review';
-  const initialHearts = Math.min(
-    maxHearts,
-    Math.max(0, Math.trunc(hearts)),
-  );
 
   const [views] = useState(() => buildQuestionViews(lesson.questions));
   const [queue, setQueue] = useState<LoadedQuestion[]>(() => [
@@ -156,17 +141,12 @@ export function LessonScreen({
   const [attempt, setAttempt] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [wrongCount, setWrongCount] = useState(0);
-  const [localHearts, setLocalHearts] = useState(initialHearts);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
-  const [showHeartsModal, setShowHeartsModal] = useState(
-    !isReview && initialHearts <= 0,
-  );
   const [startedAt] = useState(() => Date.now());
   const [finished, setFinished] = useState<{
     xp: number;
     elapsedMs: number;
   } | null>(null);
-  const [now, setNow] = useState(() => Date.now());
   const [matchState, setMatchState] =
     useState<MatchState>(emptyMatchState);
 
@@ -197,23 +177,6 @@ export function LessonScreen({
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  // 画面外でハートが回復したときも、レッスン内の表示に追従させる。
-  useEffect(() => {
-    const healed = Math.min(maxHearts, Math.max(0, Math.trunc(hearts)));
-    setLocalHearts((currentHearts) => Math.max(currentHearts, healed));
-  }, [hearts]);
-
-  useEffect(() => {
-    if (localHearts > 0 && showHeartsModal) setShowHeartsModal(false);
-  }, [localHearts, showHeartsModal]);
-
-  useEffect(() => {
-    if (!showHeartsModal) return;
-    setNow(Date.now());
-    const timer = window.setInterval(() => setNow(Date.now()), 1000);
-    return () => window.clearInterval(timer);
-  }, [showHeartsModal]);
 
   useEffect(
     () => () => {
@@ -267,11 +230,7 @@ export function LessonScreen({
       if (isReview) onCorrectQuestion?.(current.id);
     } else {
       setWrongCount((count) => count + 1);
-      if (!isReview) {
-        onWrongQuestion(current.id);
-        onSpendHeart();
-        setLocalHearts((count) => Math.max(0, count - 1));
-      }
+      if (!isReview) onWrongQuestion(current.id);
     }
     setLastCorrect(correct);
     setPhase('feedback');
@@ -280,23 +239,12 @@ export function LessonScreen({
   function handleContinue() {
     if (phase !== 'feedback' || !current) return;
 
-    if (!isReview && !lastCorrect && localHearts <= 0) {
-      setShowHeartsModal(true);
-      return;
-    }
-
     const nextQueue = advanceQueue(queue, lastCorrect);
     if (lastCorrect && nextQueue.length === 0) {
       finishLesson();
       return;
     }
     resetForNextQuestion(nextQueue);
-  }
-
-  function handleRefill() {
-    onRefillHearts();
-    setLocalHearts(maxHearts);
-    setShowHeartsModal(false);
   }
 
   function handleChoiceSelect(choice: string) {
@@ -398,11 +346,6 @@ export function LessonScreen({
     setShowExitConfirm(true);
   }
 
-  const remainingHeartMs = nextHeartInMs(
-    { hearts: localHearts, heartAnchor },
-    now,
-  );
-
   function handleKeyDown(event: KeyboardEvent) {
     if (event.repeat || event.altKey || event.ctrlKey || event.metaKey) return;
 
@@ -414,7 +357,7 @@ export function LessonScreen({
     ) {
       return;
     }
-    if (showExitConfirm || showHeartsModal) return;
+    if (showExitConfirm) return;
 
     if (event.key === 'Enter') {
       if (finished) {
@@ -602,12 +545,6 @@ export function LessonScreen({
             style={{ width: `${progressPct}%` }}
           />
         </div>
-
-        <div className="lesson-hearts">
-          <HeartIcon size={23} />
-          <span className="sr-only">残りハート</span>
-          <span>{localHearts}</span>
-        </div>
       </header>
 
       <main className="lesson-body">
@@ -742,37 +679,6 @@ export function LessonScreen({
         </Modal>
       ) : null}
 
-      {showHeartsModal ? (
-        <Modal labelledBy="hearts-modal-title">
-          <div className="modal-icon">
-            <HeartIcon size={38} />
-          </div>
-          <h2 id="hearts-modal-title" className="modal-title">
-            ハートがなくなりました
-          </h2>
-          <p className="modal-text">次のハートが回復するまで</p>
-          <p className="modal-countdown">
-            {formatCountdown(remainingHeartMs)}
-          </p>
-          <p className="modal-free">無料で全回復できます</p>
-          <div className="modal-actions">
-            <button
-              type="button"
-              className="btn btn-primary btn-block"
-              onClick={handleRefill}
-            >
-              全回復する
-            </button>
-            <button
-              type="button"
-              className="btn btn-ghost btn-block"
-              onClick={onExit}
-            >
-              やめる
-            </button>
-          </div>
-        </Modal>
-      ) : null}
     </div>
   );
 }

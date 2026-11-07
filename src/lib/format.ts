@@ -10,10 +10,3 @@ export function formatAccuracy(correct: number, total: number): string {
   if (total <= 0) return '100%';
   return `${Math.round((correct / total) * 100)}%`;
 }
-
-export function formatCountdown(milliseconds: number): string {
-  const totalSeconds = Math.max(0, Math.ceil(milliseconds / 1000));
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-}

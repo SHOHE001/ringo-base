@@ -87,8 +87,6 @@ export type Content = {
 export type Progress = {
   version: 1;
   xp: number;
-  hearts: number;
-  heartAnchor: number;
   completedLessonIds: string[];
   reviewQuestionIds: string[];
   streakCount: number;

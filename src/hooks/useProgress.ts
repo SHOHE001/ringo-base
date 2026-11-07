@@ -1,11 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { toDateKey } from '../lib/date';
 import {
-  refillHearts as refillHeartsState,
-  regenerateHearts,
-  spendHeart as spendHeartState,
-} from '../lib/hearts';
-import {
   clearProgress,
   createInitialProgress,
   loadProgress,
@@ -14,15 +9,11 @@ import {
 import { updateStreak } from '../lib/streak';
 import type { Progress } from '../lib/types';
 
-const HEART_SYNC_INTERVAL_MS = 30_000;
-
 export type ProgressActions = {
   awardXp: (amount: number, date?: string) => void;
   completeLesson: (lessonId: string) => void;
   addReviewQuestions: (questionIds: readonly string[]) => void;
   removeReviewQuestion: (questionId: string) => void;
-  spendHeart: () => void;
-  refillHearts: () => void;
   resetProgress: () => void;
 };
 
@@ -33,39 +24,6 @@ export function useProgress(): { progress: Progress; actions: ProgressActions } 
     saveProgress(progress);
   }, [progress]);
 
-  useEffect(() => {
-    const syncHearts = () => {
-      setProgress((current) => {
-        const healed = regenerateHearts(
-          { hearts: current.hearts, heartAnchor: current.heartAnchor },
-          Date.now(),
-        );
-        if (
-          healed.hearts === current.hearts &&
-          healed.heartAnchor === current.heartAnchor
-        ) {
-          return current;
-        }
-        return {
-          ...current,
-          hearts: healed.hearts,
-          heartAnchor: healed.heartAnchor,
-        };
-      });
-    };
-
-    syncHearts();
-    const timer = window.setInterval(syncHearts, HEART_SYNC_INTERVAL_MS);
-    const onVisible = () => {
-      if (document.visibilityState === 'visible') syncHearts();
-    };
-    document.addEventListener('visibilitychange', onVisible);
-
-    return () => {
-      window.clearInterval(timer);
-      document.removeEventListener('visibilitychange', onVisible);
-    };
-  }, []);
 
   const awardXp = useCallback((amount: number, date?: string) => {
     if (!Number.isFinite(amount) || amount === 0) return;
@@ -128,28 +86,6 @@ export function useProgress(): { progress: Progress; actions: ProgressActions } 
     });
   }, []);
 
-  const spendHeart = useCallback(() => {
-    setProgress((current) => {
-      const spent = spendHeartState(
-        { hearts: current.hearts, heartAnchor: current.heartAnchor },
-        Date.now(),
-      );
-      return {
-        ...current,
-        hearts: spent.hearts,
-        heartAnchor: spent.heartAnchor,
-      };
-    });
-  }, []);
-
-  const refillHearts = useCallback(() => {
-    const filled = refillHeartsState(Date.now());
-    setProgress((current) => ({
-      ...current,
-      hearts: filled.hearts,
-      heartAnchor: filled.heartAnchor,
-    }));
-  }, []);
 
   const resetProgress = useCallback(() => {
     clearProgress();
@@ -163,8 +99,6 @@ export function useProgress(): { progress: Progress; actions: ProgressActions } 
       completeLesson,
       addReviewQuestions,
       removeReviewQuestion,
-      spendHeart,
-      refillHearts,
       resetProgress,
     },
   };

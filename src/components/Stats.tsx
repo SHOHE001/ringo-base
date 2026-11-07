@@ -1,7 +1,7 @@
 import type { ComponentType } from 'react';
-import { BoltIcon, FlameIcon, HeartIcon } from './Icons';
+import { BoltIcon, FlameIcon } from './Icons';
 
-export type StatKind = 'streak' | 'xp' | 'hearts';
+export type StatKind = 'streak' | 'xp';
 
 type StatMeta = {
   label: string;
@@ -12,7 +12,6 @@ type StatMeta = {
 const META: Record<StatKind, StatMeta> = {
   streak: { label: '連続日数', suffix: '日', Icon: FlameIcon },
   xp: { label: '合計 XP', suffix: 'XP', Icon: BoltIcon },
-  hearts: { label: 'ハート', suffix: '', Icon: HeartIcon },
 };
 
 type StatChipProps = {
@@ -37,12 +36,11 @@ export function StatChip({ kind, value }: StatChipProps) {
 type StatsListProps = {
   streak: number;
   xp: number;
-  hearts: number;
 };
 
-export function StatsList({ streak, xp, hearts }: StatsListProps) {
-  const values: Record<StatKind, number> = { streak, xp, hearts };
-  const kinds: StatKind[] = ['streak', 'xp', 'hearts'];
+export function StatsList({ streak, xp }: StatsListProps) {
+  const values: Record<StatKind, number> = { streak, xp };
+  const kinds: StatKind[] = ['streak', 'xp'];
 
   return (
     <ul className="stats-list">
