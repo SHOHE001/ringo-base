@@ -1,6 +1,6 @@
 # キホンのキ
 
-基本情報技術者試験を、パス型レッスンで学ぶ個人用 Web アプリです。非公開・ローカル利用を前提にしています。
+基本情報技術者試験を、パス型レッスンで学ぶ個人用 Web アプリです。GitHub Pages で公開し、スマホのホーム画面に入れて使います。
 Vite + React + TypeScript で作られていて、進捗はブラウザの localStorage（キー `kihon-no-ki:v1`）に保存されます。サーバーは使いません。
 
 ## 起動方法
@@ -17,7 +17,7 @@ npm test         # Vitest（src/lib などの純粋ロジックとコンテン�
 
 本番ビルド（`dist/`）はホーム画面に追加でき、一度開けばオフラインでも動きます。
 
-1. `npm run build` で `dist/` を作り、HTTPS で配信できる場所に置く（`npm run preview -- --host` で同じ Wi-Fi のスマホから試すこともできますが、HTTP ではオフライン機能は効きません）。
+1. `main` に push すると GitHub Actions がビルドして GitHub Pages（https://shohe001.github.io/ringo-base/）に公開します。初回だけ、リポジトリの Settings → Pages → Source を「GitHub Actions」にしてください。
 2. スマホのブラウザで開き、iPhone は Safari の共有メニュー →「ホーム画面に追加」、Android は Chrome のメニュー →「ホーム画面に追加」。
 
 進捗は端末ごとの localStorage に保存されるため、PC とスマホで記録は共有されません。
