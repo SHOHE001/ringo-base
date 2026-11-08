@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { completedLessonCount, flattenLessons, getLessonStatuses } from './unlock';
+import {
+  completedLessonCount,
+  flattenLessons,
+  getLessonStatuses,
+  getUnitLessonStatuses,
+} from './unlock';
 import type { LoadedLesson, LoadedUnit } from './types';
 
 const ids = ['a', 'b', 'c', 'd'];
@@ -69,5 +74,30 @@ describe('flattenLessons / completedLessonCount', () => {
 
   it('コンテンツに存在する完了レッスンだけ数える', () => {
     expect(completedLessonCount(units, ['a', 'c', 'removed'])).toBe(2);
+  });
+});
+
+describe('getUnitLessonStatuses', () => {
+  const units: LoadedUnit[] = [
+    { id: 'u1', order: 1, title: 'u1', color: 'green', lessons: [lesson('a'), lesson('b')] },
+    { id: 'u2', order: 2, title: 'u2', color: 'blue', lessons: [lesson('c'), lesson('d')] },
+  ];
+
+  it('何も完了していなくても各ユニットの先頭が current', () => {
+    expect(getUnitLessonStatuses(units, [])).toEqual({
+      a: 'current',
+      b: 'locked',
+      c: 'current',
+      d: 'locked',
+    });
+  });
+
+  it('ユニット内は順番どおりに解放される', () => {
+    expect(getUnitLessonStatuses(units, ['c'])).toEqual({
+      a: 'current',
+      b: 'locked',
+      c: 'completed',
+      d: 'current',
+    });
   });
 });

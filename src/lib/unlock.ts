@@ -23,6 +23,26 @@ export function getLessonStatuses(
   return statuses;
 }
 
+/**
+ * ユニット（章）ごとに getLessonStatuses を適用する。
+ * どの章も最初のレッスンから始められ、章の中だけ順番どおりに解放される。
+ */
+export function getUnitLessonStatuses(
+  units: readonly LoadedUnit[],
+  completedIds: Iterable<string>,
+): Record<string, LessonStatus> {
+  const completed = [...completedIds];
+  return Object.assign(
+    {},
+    ...units.map((unit) =>
+      getLessonStatuses(
+        unit.lessons.map((lesson) => lesson.id),
+        completed,
+      ),
+    ),
+  );
+}
+
 export function flattenLessons(units: readonly LoadedUnit[]): LoadedLesson[] {
   return units.flatMap((unit) => unit.lessons);
 }
