@@ -170,7 +170,7 @@
             "通信を暗号化して、盗聴を防ぐ"
           ],
           "answer": "Web アプリケーションへの通信を検査し、SQL インジェクションなどの攻撃を検知・遮断する",
-          "explanation": "WAF は Web Application Firewall の略です。2つ目は一般的なファイアウォールの説明です。"
+          "explanation": "WAF は Web Application Firewall の略です。IP アドレスとポート番号で通信を制限するのは一般的なファイアウォールです。"
         },
         {
           "type": "choice",
