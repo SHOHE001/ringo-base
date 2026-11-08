@@ -5,6 +5,10 @@ import '@fontsource/m-plus-rounded-1c/700.css';
 import '@fontsource/m-plus-rounded-1c/800.css';
 import './styles.css';
 import App from './App';
+import { applyThemePreference, loadThemePreference, watchSystemTheme } from './lib/theme';
+
+applyThemePreference(loadThemePreference());
+watchSystemTheme(loadThemePreference);
 
 const rootElement = document.getElementById('root');
 
