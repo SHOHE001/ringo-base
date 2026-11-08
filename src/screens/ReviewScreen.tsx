@@ -29,7 +29,7 @@ export function ReviewScreen({ count, onStart }: ReviewScreenProps) {
         <span> 問</span>
       </p>
       <p className="review-note">
-        今回は {session} 問に挑戦します。ハートは減りません。正解した問題は、リストから消えます。
+        今回は {session} 問に挑戦します。正解した問題は、リストから消えます。
         最後まで終えると {xpReview} XP がもらえます。
       </p>
       <button type="button" className="btn btn-primary review-start" onClick={onStart}>

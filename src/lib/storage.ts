@@ -1,6 +1,5 @@
-import { maxHearts, storageKey } from '../config';
+import { storageKey } from '../config';
 import { parseDateKey } from './date';
-import { regenerateHearts } from './hearts';
 import type { Progress } from './types';
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -19,16 +18,10 @@ function parseStringArray(value: unknown): string[] | null {
   return [...new Set(value)];
 }
 
-function clamp(value: number, min: number, max: number): number {
-  return Math.min(max, Math.max(min, value));
-}
-
-export function createInitialProgress(now = Date.now()): Progress {
+export function createInitialProgress(): Progress {
   return {
     version: 1,
     xp: 0,
-    hearts: maxHearts,
-    heartAnchor: now,
     completedLessonIds: [],
     reviewQuestionIds: [],
     streakCount: 0,
@@ -37,14 +30,10 @@ export function createInitialProgress(now = Date.now()): Progress {
   };
 }
 
-function parseStoredProgress(raw: unknown, now: number): Progress | null {
+function parseStoredProgress(raw: unknown): Progress | null {
   if (!isRecord(raw)) return null;
   if (raw.version !== 1) return null;
   if (!isNonNegativeNumber(raw.xp)) return null;
-  if (typeof raw.hearts !== 'number' || !Number.isFinite(raw.hearts)) return null;
-  if (typeof raw.heartAnchor !== 'number' || !Number.isFinite(raw.heartAnchor)) {
-    return null;
-  }
 
   const completedLessonIds = parseStringArray(raw.completedLessonIds);
   if (!completedLessonIds) return null;
@@ -80,19 +69,9 @@ function parseStoredProgress(raw: unknown, now: number): Progress | null {
     }
   }
 
-  const healed = regenerateHearts(
-    {
-      hearts: clamp(Math.trunc(raw.hearts), 0, maxHearts),
-      heartAnchor: raw.heartAnchor,
-    },
-    now,
-  );
-
   return {
     version: 1,
     xp: Math.trunc(raw.xp),
-    hearts: healed.hearts,
-    heartAnchor: healed.heartAnchor,
     completedLessonIds,
     reviewQuestionIds,
     streakCount: raw.streakCount,
@@ -102,14 +81,14 @@ function parseStoredProgress(raw: unknown, now: number): Progress | null {
 }
 
 /** localStorage を読む。存在しない・壊れている場合は初期状態を返す。 */
-export function loadProgress(now = Date.now()): Progress {
+export function loadProgress(): Progress {
   try {
     const stored = window.localStorage.getItem(storageKey);
-    if (!stored) return createInitialProgress(now);
+    if (!stored) return createInitialProgress();
     const parsed: unknown = JSON.parse(stored);
-    return parseStoredProgress(parsed, now) ?? createInitialProgress(now);
+    return parseStoredProgress(parsed) ?? createInitialProgress();
   } catch {
-    return createInitialProgress(now);
+    return createInitialProgress();
   }
 }
 

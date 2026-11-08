@@ -83,10 +83,6 @@ export default function App() {
         isReplay={
           mode === 'lesson' && progress.completedLessonIds.includes(lesson.id)
         }
-        hearts={progress.hearts}
-        heartAnchor={progress.heartAnchor}
-        onSpendHeart={actions.spendHeart}
-        onRefillHearts={actions.refillHearts}
         onWrongQuestion={(questionId) =>
           actions.addReviewQuestions([questionId])
         }
@@ -129,7 +125,6 @@ export default function App() {
           <div className="top-stats-group">
             <StatChip kind="streak" value={streak} />
             <StatChip kind="xp" value={progress.xp} />
-            <StatChip kind="hearts" value={progress.hearts} />
           </div>
         </header>
 
@@ -185,7 +180,7 @@ export default function App() {
 
         <section className="panel-card" aria-labelledby="stats-title">
           <h2 id="stats-title">いまの記録</h2>
-          <StatsList streak={streak} xp={progress.xp} hearts={progress.hearts} />
+          <StatsList streak={streak} xp={progress.xp} />
         </section>
       </aside>
 

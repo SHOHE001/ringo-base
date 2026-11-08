@@ -79,18 +79,6 @@ export function BoltIcon(props: IconProps) {
   );
 }
 
-export function HeartIcon(props: IconProps) {
-  return (
-    <svg {...iconProps(props)} fill="none">
-      <path
-        d="M12 21s-7.3-4.4-9.4-8.2C.8 9.7 2.6 6 6.3 6c2 0 3.3 1.1 4.2 2.3.4.5.7.8 1.5.8s1.1-.3 1.5-.8C14.4 7.1 15.7 6 17.7 6c3.7 0 5.5 3.7 3.7 6.8C19.3 16.6 12 21 12 21Z"
-        fill="currentColor"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 export function LockIcon(props: IconProps) {
   return (
     <svg {...iconProps(props)} fill="none" stroke="currentColor" strokeWidth="2.2">
