@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Modal } from '../components/Modal';
 import { NotificationSettings } from '../components/NotificationSettings';
+import { ThemeSettings } from '../components/ThemeSettings';
 import { formatShortDate } from '../lib/date';
 import { recentDailyXp, unitProgressList } from '../lib/stats';
 import type { Content, Progress } from '../lib/types';
@@ -110,6 +111,8 @@ export function RecordScreen({
           </ul>
         )}
       </section>
+
+      <ThemeSettings />
 
       <NotificationSettings />
 

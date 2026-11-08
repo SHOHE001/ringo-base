@@ -16,6 +16,13 @@
     <meta name="apple-mobile-web-app-title" content="キホンのキ" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <title>キホンのキ</title>
+    <script>
+      // 描画前に保存済みのテーマを反映して、白い画面のちらつきを防ぐ
+      try {
+        var t = localStorage.getItem('kihon-no-ki:theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>
