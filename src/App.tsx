@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import type { ComponentType } from 'react';
 import { appName, dailyGoalXp, reviewSessionSize } from './config';
 import { content } from './content/loader';
@@ -39,6 +39,21 @@ export default function App() {
   const [view, setView] = useState<View>('learn');
   const [session, setSession] = useState<Session | null>(null);
   const { progress, actions } = useProgress();
+  const savedScrollYRef = useRef<number | null>(null);
+
+  const openSession = (next: Session) => {
+    savedScrollYRef.current = window.scrollY;
+    setSession(next);
+  };
+
+  // レッスン終了後に学習マップへ戻ったら、開始前のスクロール位置を復元する
+  useLayoutEffect(() => {
+    if (session !== null) return;
+    const y = savedScrollYRef.current;
+    if (y === null) return;
+    savedScrollYRef.current = null;
+    window.scrollTo(0, y);
+  }, [session]);
 
   const today = toDateKey(new Date());
   const todayXp = progress.dailyXp[today] ?? 0;
@@ -62,7 +77,7 @@ export default function App() {
       reviewSessionSize,
     );
     if (questions.length === 0) return;
-    setSession({
+    openSession({
       mode: 'review',
       lesson: {
         id: 'review-session',
@@ -133,7 +148,7 @@ export default function App() {
             <LearnScreen
               content={content}
               completedLessonIds={progress.completedLessonIds}
-              onStartLesson={(lesson) => setSession({ mode: 'lesson', lesson })}
+              onStartLesson={(lesson) => openSession({ mode: 'lesson', lesson })}
             />
           ) : null}
           {view === 'review' ? (
