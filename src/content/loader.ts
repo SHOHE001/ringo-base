@@ -4,6 +4,7 @@ import type {
   ContentWarning,
   LoadedLesson,
   LoadedQuestion,
+  LessonIntro,
   LoadedUnit,
   MatchQuestion,
   OrderQuestion,
@@ -180,6 +181,22 @@ export function parseQuestion(raw: unknown): Parsed<Question> {
   }
 }
 
+export function parseLessonIntro(raw: unknown): Parsed<LessonIntro> {
+  if (!isRecord(raw)) return fail('intro がオブジェクトではありません');
+  if (!isNonEmptyString(raw.summary)) return fail('intro に summary がありません');
+  if (!Array.isArray(raw.points) || raw.points.length === 0) {
+    return fail('intro の points は1つ以上必要です');
+  }
+  const points: LessonIntro['points'] = [];
+  for (const point of raw.points) {
+    if (!isRecord(point) || !isNonEmptyString(point.term) || !isNonEmptyString(point.text)) {
+      return fail('intro の points は term と text の文字列が必要です');
+    }
+    points.push({ term: point.term, text: point.text });
+  }
+  return ok({ summary: raw.summary, points });
+}
+
 function basename(path: string): string {
   const parts = path.split('/');
   return parts[parts.length - 1] ?? path;
@@ -287,6 +304,16 @@ export function loadContent(): Content {
       const lessonId = rawLesson.id;
       const lessonTitle = rawLesson.title;
 
+      let intro: LessonIntro | undefined;
+      if (rawLesson.intro !== undefined) {
+        const parsedIntro = parseLessonIntro(rawLesson.intro);
+        if (parsedIntro.ok) {
+          intro = parsedIntro.value;
+        } else {
+          warn(`レッスン "${lessonTitle}" の導入を表示しません（${parsedIntro.reason}）`);
+        }
+      }
+
       const questions: LoadedQuestion[] = [];
 
       rawLesson.questions.forEach((rawQuestion, questionIndex) => {
@@ -332,6 +359,7 @@ export function loadContent(): Content {
         id: lessonId,
         title: lessonTitle,
         unitId,
+        ...(intro ? { intro } : {}),
         questions,
       });
     });

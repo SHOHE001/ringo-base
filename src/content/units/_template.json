@@ -8,6 +8,10 @@
     {
       "id": "lesson-id",
       "title": "レッスン名",
+      "intro": {
+        "summary": "任意: レッスンの最初に表示する紹介文",
+        "points": [{ "term": "用語", "text": "要点の説明" }]
+      },
       "questions": [
         {
           "type": "choice",

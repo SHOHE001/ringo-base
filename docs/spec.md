@@ -56,7 +56,8 @@ type Unit = {
   color?: 'green' | 'blue' | 'purple' | 'orange' | 'red' | 'gold'; // 省略時は順に割り当て
   lessons: Lesson[];
 };
-type Lesson = { id: string; title: string; questions: Question[] };
+type LessonIntro = { summary: string; points: { term: string; text: string }[] };
+type Lesson = { id: string; title: string; intro?: LessonIntro; questions: Question[] };
 
 type Base = { prompt: string; code?: string; explanation?: string };
 type Question = Base & (

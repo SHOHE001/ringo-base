@@ -1154,6 +1154,63 @@ button {
   padding: 30px 20px 36px;
 }
 
+.lesson-intro-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.lesson-intro-eyebrow {
+  margin: 0 0 2px;
+  color: var(--green-dark);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.lesson-intro-title {
+  margin: 0;
+  color: var(--text);
+  font-size: 1.4rem;
+  line-height: 1.35;
+}
+
+.lesson-intro-summary {
+  margin: 0 0 20px;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.7;
+}
+
+.lesson-intro-points {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lesson-intro-point {
+  padding: 14px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.lesson-intro-point strong {
+  color: var(--text);
+  font-size: 0.98rem;
+}
+
+.lesson-intro-point p {
+  margin: 4px 0 0;
+  color: var(--text-sub);
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.65;
+}
+
 .question-area {
   width: 100%;
 }

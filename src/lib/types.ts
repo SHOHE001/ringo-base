@@ -36,9 +36,21 @@ export type MatchQuestion = {
 
 export type Question = ChoiceQuestion | TrueFalseQuestion | OrderQuestion | MatchQuestion;
 
+export type LessonIntroPoint = {
+  term: string;
+  text: string;
+};
+
+/** レッスンの最初に表示する導入カード。 */
+export type LessonIntro = {
+  summary: string;
+  points: LessonIntroPoint[];
+};
+
 export type Lesson = {
   id: string;
   title: string;
+  intro?: LessonIntro;
   questions: Question[];
 };
 
@@ -62,6 +74,7 @@ export type LoadedLesson = {
   id: string;
   title: string;
   unitId: string;
+  intro?: LessonIntro;
   questions: LoadedQuestion[];
 };
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { content, createQuestionId, parseQuestion } from './loader';
+import { content, createQuestionId, parseLessonIntro, parseQuestion } from './loader';
 
 describe('parseQuestion', () => {
   it('4形式の正しい問題を受け入れる', () => {
@@ -102,5 +102,20 @@ describe('同梱コンテンツ', () => {
 
   it('_template.json は読み込まれない', () => {
     expect(content.units.some((u) => u.id === 'unit-id')).toBe(false);
+  });
+});
+
+describe('lesson intro', () => {
+  it('summary と points が欠けた導入を拒否する', () => {
+    expect(parseLessonIntro({ points: [{ term: 't', text: 'x' }] }).ok).toBe(false);
+    expect(parseLessonIntro({ summary: 's', points: [] }).ok).toBe(false);
+    expect(parseLessonIntro({ summary: 's', points: [{ term: 't' }] }).ok).toBe(false);
+    expect(parseLessonIntro({ summary: 's', points: [{ term: 't', text: 'x' }] }).ok).toBe(true);
+  });
+
+  it('全レッスンに導入がある', () => {
+    const lessons = content.units.flatMap((unit) => unit.lessons);
+    expect(lessons.length).toBeGreaterThan(0);
+    expect(lessons.filter((lesson) => !lesson.intro).map((lesson) => lesson.id)).toEqual([]);
   });
 });
