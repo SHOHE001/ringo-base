@@ -17,6 +17,7 @@ import {
 } from '../components/Icons';
 import { Mascot } from '../components/Mascot';
 import { Modal } from '../components/Modal';
+import { LessonIntroView } from '../components/lesson/LessonIntroView';
 import {
   ChoiceQuestionView,
   MatchQuestionView,
@@ -120,7 +121,26 @@ function formatCorrectAnswer(question: Question): string {
   }
 }
 
-export function LessonScreen({
+export function LessonScreen(props: LessonScreenProps) {
+  const { lesson, mode = 'lesson', onExit } = props;
+  const [introDone, setIntroDone] = useState(false);
+
+  // The session mounts after the intro so its timer excludes reading time.
+  if (mode === 'lesson' && lesson.intro && !introDone) {
+    return (
+      <LessonIntroView
+        title={lesson.title}
+        intro={lesson.intro}
+        onStart={() => setIntroDone(true)}
+        onExit={onExit}
+      />
+    );
+  }
+
+  return <LessonSession {...props} />;
+}
+
+function LessonSession({
   lesson,
   mode = 'lesson',
   isReplay,
